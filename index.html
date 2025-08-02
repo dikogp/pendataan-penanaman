@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pendataan Penanaman</title>
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="theme-color" content="#4f46e5" />
+    <link
+      rel="apple-touch-icon"
+      href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRpY2UgZmlsbD0iIzM1OTY3OCIgd2lkdGg9IjI4IiBoZWlnaHQ9IjI4IiByeD0iMiI+PC9kaWNlPjxwYXRoIGZpbGw9IiM5OTE3MzIiIGQ9Im1xME40OC5qNC5qNnE2OS40NSI+PC9wYXRoPjxlbGxpcHNlIGN4PSIxOCIgY3k9IjE4IiByeD0iNSIgcnk9IjMiIGZpbGw9IiM2NDM0ODkiLz48L3N2Zz4="
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .app-header {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+      }
+
+      .app-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .app-header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+
+      .card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #374151;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 14px 28px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-secondary {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      }
+
+      .btn-danger {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      }
+
+      .plant-card {
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 15px;
+        position: relative;
+        transition: all 0.3s ease;
+      }
+
+      .plant-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .plant-info {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 20px;
+        align-items: start;
+      }
+
+      .plant-details h3 {
+        color: #1e293b;
+        margin-bottom: 8px;
+        font-size: 1.3rem;
+      }
+
+      .plant-meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .meta-item {
+        background: white;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+      }
+
+      .meta-label {
+        font-size: 0.8rem;
+        color: #64748b;
+        font-weight: 500;
+      }
+
+      .meta-value {
+        font-size: 0.9rem;
+        color: #1e293b;
+        font-weight: 600;
+      }
+
+      .barcode-section {
+        text-align: center;
+      }
+
+      .barcode-canvas {
+        background: white;
+        border-radius: 8px;
+        padding: 10px;
+        margin: 10px 0;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .action-buttons button {
+        flex: 1;
+        padding: 8px 16px;
+        font-size: 14px;
+        margin: 0;
+      }
+
+      .tabs {
+        display: flex;
+        margin-bottom: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 4px;
+      }
+
+      .tab {
+        flex: 1;
+        padding: 12px 20px;
+        background: transparent;
+        border: none;
+        color: white;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .tab.active {
+        background: white;
+        color: #667eea;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 16px;
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .install-prompt {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .install-prompt.show {
+        display: flex;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 15px;
+        }
+
+        .app-header h1 {
+          font-size: 2rem;
+        }
+
+        .card {
+          padding: 20px;
+        }
+
+        .plant-info {
+          grid-template-columns: 1fr;
+        }
+
+        .plant-meta {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .action-buttons {
+          flex-direction: column;
+        }
+      }
+
+      .offline-indicator {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #ef4444;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        display: none;
+        z-index: 1000;
+      }
+
+      .offline-indicator.show {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="offline-indicator" id="offlineIndicator">📱 Mode Offline</div>
+
+    <div class="install-prompt" id="installPrompt">
+      <span
+        >📱 Install aplikasi ini di perangkat Anda untuk akses yang lebih
+        mudah!</span
+      >
+      <button
+        class="btn"
+        style="width: auto; margin: 0; padding: 8px 16px"
+        onclick="installApp()"
+      >
+        Install
+      </button>
+    </div>
+
+    <div class="container">
+      <div class="app-header">
+        <h1>🌱 Pendataan Penanaman</h1>
+        <p>Kelola data tanaman Anda dengan mudah</p>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('input')">
+          📝 Input Data
+        </button>
+        <button class="tab" onclick="switchTab('list')">
+          📋 Daftar Tanaman
+        </button>
+        <button class="tab" onclick="switchTab('stats')">📊 Statistik</button>
+      </div>
+
+      <!-- Tab Input Data -->
+      <div id="inputTab" class="tab-content active">
+        <div class="card">
+          <h2 style="margin-bottom: 20px; color: #1e293b">
+            ➕ Tambah Data Tanaman
+          </h2>
+          <form id="plantForm">
+            <div class="form-group">
+              <label for="plantName">Nama Tanaman</label>
+              <input
+                type="text"
+                id="plantName"
+                required
+                placeholder="Contoh: Tomat Cherry"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="plantType">Jenis Tanaman</label>
+              <select id="plantType" required>
+                <option value="">Pilih jenis tanaman</option>
+                <option value="sayuran">Sayuran</option>
+                <option value="buah">Buah-buahan</option>
+                <option value="herbs">Herbal/Rempah</option>
+                <option value="hias">Tanaman Hias</option>
+                <option value="pohon">Pohon</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="plantDate">Tanggal Tanam</label>
+              <input type="date" id="plantDate" required />
+            </div>
+
+            <div class="form-group">
+              <label for="plantLocation">Lokasi Penanaman</label>
+              <input
+                type="text"
+                id="plantLocation"
+                required
+                placeholder="Contoh: Kebun Belakang A1"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="plantVariety">Varietas</label>
+              <input
+                type="text"
+                id="plantVariety"
+                placeholder="Contoh: Hibrida F1"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="plantNotes">Catatan</label>
+              <textarea
+                id="plantNotes"
+                rows="3"
+                placeholder="Catatan tambahan tentang penanaman..."
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn">💾 Simpan Data Tanaman</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Tab Daftar Tanaman -->
+      <div id="listTab" class="tab-content">
+        <div class="card">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 20px;
+            "
+          >
+            <h2 style="color: #1e293b">📋 Daftar Tanaman</h2>
+            <button
+              class="btn btn-danger"
+              style="width: auto; padding: 8px 16px"
+              onclick="clearAllData()"
+            >
+              🗑️ Hapus Semua
+            </button>
+          </div>
+          <div id="plantList"></div>
+        </div>
+      </div>
+
+      <!-- Tab Statistik -->
+      <div id="statsTab" class="tab-content">
+        <div class="card">
+          <h2 style="margin-bottom: 20px; color: #1e293b">
+            📊 Statistik Penanaman
+          </h2>
+          <div class="stats-grid" id="statsGrid"></div>
+          <div id="monthlyChart"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
+    <script>
+      // PWA Service Worker Registration
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("./sw.js")
+            .then((registration) => {
+              console.log("SW registered: ", registration);
+            })
+            .catch((registrationError) => {
+              console.log("SW registration failed: ", registrationError);
+            });
+        });
+      }
+
+      // PWA Install Prompt
+      let deferredPrompt;
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById("installPrompt").classList.add("show");
+      });
+
+      function installApp() {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === "accepted") {
+              document.getElementById("installPrompt").classList.remove("show");
+            }
+            deferredPrompt = null;
+          });
+        }
+      }
+
+      // Offline Detection
+      window.addEventListener("online", () => {
+        document.getElementById("offlineIndicator").classList.remove("show");
+      });
+
+      window.addEventListener("offline", () => {
+        document.getElementById("offlineIndicator").classList.add("show");
+      });
+
+      // Application State
+      let plants = JSON.parse(localStorage.getItem("plants")) || [];
+
+      // Tab Switching
+      function switchTab(tabName) {
+        // Hide all tabs
+        document.querySelectorAll(".tab-content").forEach((tab) => {
+          tab.classList.remove("active");
+        });
+        document.querySelectorAll(".tab").forEach((tab) => {
+          tab.classList.remove("active");
+        });
+
+        // Show selected tab
+        document.getElementById(tabName + "Tab").classList.add("active");
+        event.target.classList.add("active");
+
+        // Load data when switching to list or stats
+        if (tabName === "list") {
+          displayPlants();
+        } else if (tabName === "stats") {
+          displayStats();
+        }
+      }
+
+      // Form Submission
+      document
+        .getElementById("plantForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const plantData = {
+            id: Date.now().toString(),
+            name: document.getElementById("plantName").value,
+            type: document.getElementById("plantType").value,
+            date: document.getElementById("plantDate").value,
+            location: document.getElementById("plantLocation").value,
+            variety: document.getElementById("plantVariety").value,
+            notes: document.getElementById("plantNotes").value,
+            createdAt: new Date().toISOString(),
+          };
+
+          plants.push(plantData);
+          localStorage.setItem("plants", JSON.stringify(plants));
+
+          // Reset form
+          this.reset();
+
+          // Show success message
+          alert("✅ Data tanaman berhasil disimpan!");
+
+          // Switch to list tab
+          switchTab("list");
+          document
+            .querySelector(".tab[onclick=\"switchTab('list')\"]")
+            .classList.add("active");
+          document
+            .querySelector(".tab[onclick=\"switchTab('input')\"]")
+            .classList.remove("active");
+        });
+
+      // Display Plants
+      function displayPlants() {
+        const plantList = document.getElementById("plantList");
+
+        if (plants.length === 0) {
+          plantList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #64748b;">
+                        <div style="font-size: 4rem; margin-bottom: 20px;">🌱</div>
+                        <h3>Belum ada data tanaman</h3>
+                        <p>Tambahkan tanaman pertama Anda di tab Input Data</p>
+                    </div>
+                `;
+          return;
+        }
+
+        plantList.innerHTML = plants
+          .map(
+            (plant) => `
+                <div class="plant-card">
+                    <div class="plant-info">
+                        <div class="plant-details">
+                            <h3>${plant.name}</h3>
+                            <div class="plant-meta">
+                                <div class="meta-item">
+                                    <div class="meta-label">Jenis</div>
+                                    <div class="meta-value">${getTypeIcon(
+                                      plant.type
+                                    )} ${plant.type}</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Tanggal Tanam</div>
+                                    <div class="meta-value">${formatDate(
+                                      plant.date
+                                    )}</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Lokasi</div>
+                                    <div class="meta-value">📍 ${
+                                      plant.location
+                                    }</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Usia</div>
+                                    <div class="meta-value">${calculateAge(
+                                      plant.date
+                                    )} hari</div>
+                                </div>
+                            </div>
+                            ${
+                              plant.variety
+                                ? `<p><strong>Varietas:</strong> ${plant.variety}</p>`
+                                : ""
+                            }
+                            ${
+                              plant.notes
+                                ? `<p><strong>Catatan:</strong> ${plant.notes}</p>`
+                                : ""
+                            }
+                        </div>
+                        <div class="barcode-section">
+                            <canvas id="barcode-${
+                              plant.id
+                            }" class="barcode-canvas"></canvas>
+                            <div style="font-size: 0.8rem; color: #64748b; margin-top: 5px;">ID: ${
+                              plant.id
+                            }</div>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" onclick="downloadBarcode('${
+                          plant.id
+                        }', '${plant.name}')">📱 Download Barcode</button>
+                        <button class="btn btn-danger" onclick="deletePlant('${
+                          plant.id
+                        }')">🗑️ Hapus</button>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+
+        // Generate barcodes
+        plants.forEach((plant) => {
+          JsBarcode(`#barcode-${plant.id}`, plant.id, {
+            format: "CODE128",
+            width: 2,
+            height: 50,
+            displayValue: true,
+            fontSize: 12,
+            margin: 5,
+          });
+        });
+      }
+
+      // Display Statistics
+      function displayStats() {
+        const statsGrid = document.getElementById("statsGrid");
+
+        const totalPlants = plants.length;
+        const typeCount = plants.reduce((acc, plant) => {
+          acc[plant.type] = (acc[plant.type] || 0) + 1;
+          return acc;
+        }, {});
+
+        const avgAge =
+          plants.length > 0
+            ? Math.round(
+                plants.reduce(
+                  (sum, plant) => sum + calculateAge(plant.date),
+                  0
+                ) / plants.length
+              )
+            : 0;
+
+        const newestPlant =
+          plants.length > 0
+            ? Math.min(...plants.map((plant) => calculateAge(plant.date)))
+            : 0;
+
+        statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-number">${totalPlants}</div>
+                    <div class="stat-label">Total Tanaman</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${
+                      Object.keys(typeCount).length
+                    }</div>
+                    <div class="stat-label">Jenis Berbeda</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${avgAge}</div>
+                    <div class="stat-label">Rata-rata Usia (hari)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${newestPlant}</div>
+                    <div class="stat-label">Tanaman Terbaru (hari)</div>
+                </div>
+            `;
+
+        // Type distribution
+        if (Object.keys(typeCount).length > 0) {
+          const typeStats = Object.entries(typeCount)
+            .map(
+              ([type, count]) => `
+                        <div class="meta-item" style="margin-bottom: 10px;">
+                            <div class="meta-label">${getTypeIcon(
+                              type
+                            )} ${type}</div>
+                            <div class="meta-value">${count} tanaman</div>
+                        </div>
+                    `
+            )
+            .join("");
+
+          document.getElementById("monthlyChart").innerHTML = `
+                    <h3 style="margin: 20px 0; color: #1e293b;">📈 Distribusi Jenis Tanaman</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                        ${typeStats}
+                    </div>
+                `;
+        } else {
+          document.getElementById("monthlyChart").innerHTML = "";
+        }
+      }
+
+      // Helper Functions
+      function getTypeIcon(type) {
+        const icons = {
+          sayuran: "🥬",
+          buah: "🍎",
+          herbs: "🌿",
+          hias: "🌺",
+          pohon: "🌳",
+        };
+        return icons[type] || "🌱";
+      }
+
+      function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString("id-ID", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+      }
+
+      function calculateAge(plantDate) {
+        const today = new Date();
+        const planted = new Date(plantDate);
+        const diffTime = Math.abs(today - planted);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays;
+      }
+
+      function deletePlant(plantId) {
+        if (confirm("Apakah Anda yakin ingin menghapus tanaman ini?")) {
+          plants = plants.filter((plant) => plant.id !== plantId);
+          localStorage.setItem("plants", JSON.stringify(plants));
+          displayPlants();
+          alert("✅ Tanaman berhasil dihapus!");
+        }
+      }
+
+      function clearAllData() {
+        if (
+          confirm(
+            "Apakah Anda yakin ingin menghapus SEMUA data tanaman? Tindakan ini tidak dapat dibatalkan!"
+          )
+        ) {
+          plants = [];
+          localStorage.setItem("plants", JSON.stringify(plants));
+          displayPlants();
+          alert("✅ Semua data berhasil dihapus!");
+        }
+      }
+
+      function downloadBarcode(plantId, plantName) {
+        const canvas = document.getElementById(`barcode-${plantId}`);
+
+        // Create a new canvas with white background
+        const downloadCanvas = document.createElement("canvas");
+        const ctx = downloadCanvas.getContext("2d");
+
+        downloadCanvas.width = canvas.width;
+        downloadCanvas.height = canvas.height + 60; // Extra space for title
+
+        // Fill white background
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, downloadCanvas.width, downloadCanvas.height);
+
+        // Add title
+        ctx.fillStyle = "black";
+        ctx.font = "bold 16px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(plantName, downloadCanvas.width / 2, 25);
+
+        // Add subtitle
+        ctx.font = "12px Arial";
+        ctx.fillText("ID: " + plantId, downloadCanvas.width / 2, 45);
+
+        // Draw barcode
+        ctx.drawImage(canvas, 0, 50);
+
+        // Download
+        const link = document.createElement("a");
+        link.download = `barcode-${plantName.replace(
+          /\s+/g,
+          "_"
+        )}-${plantId}.png`;
+        link.href = downloadCanvas.toDataURL();
+        link.click();
+      }
+
+      function exportToCSV() {
+        if (plants.length === 0) {
+          alert("Tidak ada data untuk diekspor!");
+          return;
+        }
+
+        const headers = [
+          "ID",
+          "Nama Tanaman",
+          "Jenis",
+          "Tanggal Tanam",
+          "Lokasi",
+          "Varietas",
+          "Catatan",
+          "Usia (hari)",
+        ];
+        const csvContent = [
+          headers.join(","),
+          ...plants.map((plant) =>
+            [
+              plant.id,
+              `"${plant.name}"`,
+              plant.type,
+              plant.date,
+              `"${plant.location}"`,
+              `"${plant.variety || ""}"`,
+              `"${plant.notes || ""}"`,
+              calculateAge(plant.date),
+            ].join(",")
+          ),
+        ].join("\n");
+
+        const blob = new Blob([csvContent], {
+          type: "text/csv;charset=utf-8;",
+        });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `data-tanaman-${
+          new Date().toISOString().split("T")[0]
+        }.csv`;
+        link.click();
+      }
+
+      // Initialize app
+      document.addEventListener("DOMContentLoaded", function () {
+        // Set today's date as default
+        document.getElementById("plantDate").valueAsDate = new Date();
+
+        // Load initial data
+        displayPlants();
+        displayStats();
+      });
+
+      // Auto-save to prevent data loss
+      window.addEventListener("beforeunload", function () {
+        localStorage.setItem("plants", JSON.stringify(plants));
+      });
+
+      // Keyboard shortcuts
+      document.addEventListener("keydown", function (e) {
+        if (e.ctrlKey || e.metaKey) {
+          switch (e.key) {
+            case "1":
+              e.preventDefault();
+              switchTab("input");
+              break;
+            case "2":
+              e.preventDefault();
+              switchTab("list");
+              break;
+            case "3":
+              e.preventDefault();
+              switchTab("stats");
+              break;
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
